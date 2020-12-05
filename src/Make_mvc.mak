@@ -867,6 +867,7 @@ GUI_INCL = \
 GUI_OBJ = \
 	$(OUTDIR)\gui.obj \
 	$(OUTDIR)\gui_beval.obj \
+	$(OUTDIR)\dark_mode.obj \
 	$(OUTDIR)\gui_w32.obj
 GUI_LIB = \
 	gdi32.lib version.lib $(IME_LIB) \
@@ -1610,6 +1611,8 @@ $(OUTDIR)/insexpand.obj:	$(OUTDIR) insexpand.c  $(INCL)
 $(OUTDIR)/gui.obj:	$(OUTDIR) gui.c  $(INCL) $(GUI_INCL)
 
 $(OUTDIR)/gui_beval.obj:	$(OUTDIR) gui_beval.c $(INCL) $(GUI_INCL)
+
+$(OUTDIR)/dark_mode.obj:	$(OUTDIR) dark_mode.cpp
 
 $(OUTDIR)/gui_w32.obj:	$(OUTDIR) gui_w32.c $(INCL) $(GUI_INCL) version.h
 

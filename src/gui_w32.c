@@ -24,6 +24,7 @@
  */
 
 #include "vim.h"
+#include "dark_mode.h"
 
 #if defined(FEAT_DIRECTX)
 # include "gui_dwrite.h"
@@ -4533,6 +4534,14 @@ _WndProc(
 
     switch (uMsg)
     {
+	case WM_CREATE: 
+	    {
+		if (g_darkModeSupported)
+		{
+		    _AllowDarkModeForWindow(hwnd, 1);
+		    RefreshTitleBarThemeColor(hwnd);
+		}
+	    } break;
 	HANDLE_MSG(hwnd, WM_DEADCHAR,	_OnDeadChar);
 	HANDLE_MSG(hwnd, WM_SYSDEADCHAR, _OnDeadChar);
 	// HANDLE_MSG(hwnd, WM_ACTIVATE,    _OnActivate);
@@ -4657,6 +4666,12 @@ _WndProc(
 
 	// Notification for change in SystemParametersInfo()
     case WM_SETTINGCHANGE:
+	// Refresh dark mode
+	if (IsColorSchemeChangeMessage(lParam))
+	{
+	    g_darkModeEnabled = _ShouldAppsUseDarkMode() && !IsHighContrast();
+	    RefreshTitleBarThemeColor(hwnd);
+	}
 	return _OnSettingChange((UINT)wParam);
 
 #if defined(FEAT_TOOLBAR) || defined(FEAT_GUI_TABLINE)
@@ -5175,6 +5190,8 @@ gui_mch_prepare(int *argc, char **argv)
     int
 gui_mch_init(void)
 {
+    InitDarkMode();
+
     const WCHAR szVimWndClassW[] = VIM_CLASSW;
     const WCHAR szTextAreaClassW[] = L"VimTextArea";
     WNDCLASSW wndclassw;
